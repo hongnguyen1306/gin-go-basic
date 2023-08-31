@@ -33,7 +33,11 @@ func CreateUserTable(db *pg.DB) error {
 func CreateUser(c *gin.Context) {
 	dbConnect := db.ConnectDatabase()
 	var user models.User
-	c.BindJSON(&user)
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	fullName := user.FullName
 	employeeCode := user.EmployeeCode
 	email := user.Email
@@ -89,7 +93,7 @@ func GetSingleUser(c *gin.Context) {
 func GetAllUsers(c *gin.Context) {
 	dbConnect := db.ConnectDatabase()
 	var user []models.User
-	err := dbConnect.Model(user).WherePK().Select()
+	err := dbConnect.Model(&user).Select()
 
 	if err != nil {
 		log.Printf("Error while getting all users, Reason: %v\n", err)
