@@ -7,10 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routes(address string) error {
+func SetupRouter() *gin.Engine {
 	r := gin.Default()
-	apiRoutes := r.Group("/api")
-	userRoutes := apiRoutes.Group("/user")
+	userRoutes := r.Group("/api")
 
 	{
 		userRoutes.GET("/", welcome)
@@ -18,7 +17,7 @@ func Routes(address string) error {
 		userRoutes.GET("/users", controllers.GetAllUsers)
 		userRoutes.GET("/user/:userId", controllers.GetSingleUser)
 	}
-	return r.Run(address)
+	return r
 }
 
 func welcome(c *gin.Context) {

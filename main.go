@@ -1,12 +1,12 @@
 package main
 
 import (
-	"app/db"
 	"app/routes"
-	"log"
+	"fmt"
 )
 
 func main() {
-	db.ConnectDatabase()
-	log.Fatal(routes.Routes(":8080"))
+	fmt.Println("Main Application Starts")
+	r := routes.SetupRouter()
+	r.Run(":8080")
 }
