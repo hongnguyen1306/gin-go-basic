@@ -1,21 +1,22 @@
 package routes
 
 import (
-	"app/controllers"
+	"app/modules/user/transport/ginuser"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-pg/pg/v10"
 )
 
-func SetupRouter() *gin.Engine {
+func SetupRouter(dbConnect *pg.DB) *gin.Engine {
 	r := gin.Default()
 	userRoutes := r.Group("/api")
 
 	{
 		userRoutes.GET("/", welcome)
-		userRoutes.POST("/user", controllers.CreateUser)
-		userRoutes.GET("/users", controllers.GetAllUsers)
-		userRoutes.GET("/user/:userId", controllers.GetSingleUser)
+		userRoutes.POST("/user", ginuser.HandleCreateUser(dbConnect))
+		userRoutes.GET("/users", ginuser.HandleListUser(dbConnect))
+		userRoutes.GET("/user/:userId", ginuser.HandleFindUser(dbConnect))
 	}
 	return r
 }
