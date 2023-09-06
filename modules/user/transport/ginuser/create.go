@@ -4,6 +4,7 @@ import (
 	"app/modules/user/business"
 	"app/modules/user/entity"
 	"app/modules/user/repository/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -19,7 +20,7 @@ func HandleCreateUser(db *pg.DB) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-
+		fmt.Println("req", user)
 		data := &entity.User{
 			Id:           guuid.New().String(),
 			FullName:     user.FullName,

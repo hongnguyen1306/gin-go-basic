@@ -6,7 +6,7 @@ import (
 )
 
 func (s *sqlRepo) Create(c context.Context, data *entity.User) error {
-	_, err := s.db.Model(data).Insert()
+	_, err := s.db.WithContext(c).Model(data).Insert()
 	if err != nil {
 		return err
 	}

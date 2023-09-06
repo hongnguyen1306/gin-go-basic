@@ -1,10 +1,12 @@
 -- +migrate Up
 CREATE TABLE users(
-    id int,
+    id text,
     full_name text,
     email text,
     employee_code int,
-    role text
+    role text,
+    created_at time DEFAULT now(),
+    updated_at time DEFAULT now()
 );
 
 -- +migrate Down

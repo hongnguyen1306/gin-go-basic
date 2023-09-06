@@ -3,6 +3,7 @@ package entity
 import "time"
 
 type User struct {
+	tableName    struct{}  `pg:"users,alias:users"`
 	Id           string    `json:"id"`
 	FullName     string    `json:"full_name"`
 	EmployeeCode int       `json:"employee_code"`
