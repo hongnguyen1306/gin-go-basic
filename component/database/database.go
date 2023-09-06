@@ -7,7 +7,7 @@ import (
 )
 
 func ConnectDatabase() *pg.DB {
-	opt, err := pg.ParseURL("postgres://postgres:123@postgres:5435/postgres?sslmode=disable")
+	opt, err := pg.ParseURL("postgres://postgres:123@host.docker.internal:5435/postgres?sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
