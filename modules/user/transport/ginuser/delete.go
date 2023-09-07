@@ -3,7 +3,6 @@ package ginuser
 import (
 	"app/modules/user/business"
 	"app/modules/user/repository/sql"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -14,7 +13,6 @@ import (
 func HandleDeleteUser(db *pg.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("userId")
-		fmt.Println("id ", id)
 
 		store := sql.NewSQLRepo(db)
 		biz := business.NewBusiness(store)

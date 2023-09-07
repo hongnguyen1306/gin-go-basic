@@ -12,7 +12,13 @@ func ConnectDatabase() *pg.DB {
 		panic(err)
 	}
 
-	fmt.Println("pass", opt)
 	db := pg.Connect(opt)
+	var n int
+	_, err2 := db.QueryOne(pg.Scan(&n), "SELECT 1")
+	if err2 != nil {
+		panic(err2)
+	}
+	fmt.Println(n)
+
 	return db
 }

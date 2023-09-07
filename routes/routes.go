@@ -14,7 +14,9 @@ func SetupRouter(dbConnect *pg.DB) *gin.Engine {
 
 	{
 		userRoutes.GET("/", welcome)
+		userRoutes.POST("/register", ginuser.HandleRegister(dbConnect))
 		userRoutes.POST("/user", ginuser.HandleCreateUser(dbConnect))
+		userRoutes.POST("/login", ginuser.HandleLogin(dbConnect))
 		userRoutes.POST("/import", ginuser.HandleImportUserCsv(dbConnect))
 		userRoutes.GET("/users", ginuser.HandleListUser(dbConnect))
 		userRoutes.GET("/user/:userId", ginuser.HandleFindUser(dbConnect))

@@ -5,6 +5,8 @@ CREATE TABLE users(
     email text,
     employee_code int,
     role text,
+    salt text,
+    password text,
     created_at time DEFAULT now(),
     updated_at time DEFAULT now()
 );
