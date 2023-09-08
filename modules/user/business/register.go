@@ -30,15 +30,14 @@ func NewRegisterStorage(registerStorage RegisterStorage, hasher Hasher) *registe
 	}
 }
 
-func (biz *registerBiz) Register(ctx context.Context, data entity.User) error {
+func (biz *registerBiz) Register(ctx context.Context, data *entity.User) error {
 	user, err := biz.registerStorage.FindData(ctx, map[string]interface{}{"email": data.Email})
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(entity.ErrEmailExisted)
-	if user.Id != "" {
+	if user != nil {
 		return entity.ErrEmailExisted
 	}
 

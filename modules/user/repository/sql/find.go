@@ -10,11 +10,11 @@ import (
 
 func (sql *sqlRepo) FindData(context context.Context, condition map[string]interface{}) (*entity.User, error) {
 
-	data := &entity.User{}
+	var data entity.User
 
-	if err := sql.db.Model(data).Where("? = ?", pg.Ident(maps.Keys(condition)[0]), maps.Values(condition)[0]).Select(); err != nil {
+	if err := sql.db.Model(&data).Where("? = ?", pg.Ident(maps.Keys(condition)[0]), maps.Values(condition)[0]).Select(); err != nil {
 		return nil, err
 	}
 
-	return data, nil
+	return &data, nil
 }

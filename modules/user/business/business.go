@@ -8,7 +8,6 @@ import (
 )
 
 type UserRepository interface {
-	CreateData(context context.Context, data *entity.User) error
 	ListData(context context.Context) ([]entity.User, error)
 	FindData(context context.Context, condition map[string]interface{}) (*entity.User, error)
 	DeleteData(context context.Context, id string) (orm.Result, error)

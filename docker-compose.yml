@@ -15,6 +15,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - SYSTEM_SECRET=secretKey
+      - POSTGRES_CONN_STRING=postgres://postgres:123@host.docker.internal:5435/postgres?sslmode=disable
     ports:
       - 8080:8080
     volumes:

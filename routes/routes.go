@@ -1,27 +1,30 @@
 package routes
 
 import (
+	"app/component/app_context"
+	"app/memcache"
+	"app/middleware"
+	"app/modules/user/repository/sql"
 	"app/modules/user/transport/ginuser"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg/v10"
 )
 
-func SetupRouter(dbConnect *pg.DB) *gin.Engine {
+func SetupRouter(appCtx app_context.AppContext) *gin.Engine {
 	r := gin.Default()
-	userRoutes := r.Group("/api")
 
+	userStore := sql.NewSQLRepo(appCtx.GetMainDBConnection())
+	userCaching := memcache.NewUserCaching(memcache.NewCaching(), userStore)
+	userRoutes := r.Group("/api")
 	{
 		userRoutes.GET("/", welcome)
-		userRoutes.POST("/register", ginuser.HandleRegister(dbConnect))
-		userRoutes.POST("/user", ginuser.HandleCreateUser(dbConnect))
-		userRoutes.POST("/login", ginuser.HandleLogin(dbConnect))
-		userRoutes.POST("/import", ginuser.HandleImportUserCsv(dbConnect))
-		userRoutes.GET("/users", ginuser.HandleListUser(dbConnect))
-		userRoutes.GET("/user/:userId", ginuser.HandleFindUser(dbConnect))
-		userRoutes.DELETE("/user/:userId", ginuser.HandleDeleteUser(dbConnect))
-
+		userRoutes.POST("/register", ginuser.HandleRegister(appCtx))
+		userRoutes.POST("/login", ginuser.HandleLogin(appCtx))
+		userRoutes.POST("/import", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleImportUserCsv(appCtx))
+		userRoutes.GET("/users", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleListUser(appCtx))
+		userRoutes.GET("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleFindUser(appCtx))
+		userRoutes.DELETE("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleDeleteUser(appCtx))
 	}
 	return r
 }

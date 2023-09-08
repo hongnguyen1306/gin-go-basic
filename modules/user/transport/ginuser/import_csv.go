@@ -1,6 +1,7 @@
 package ginuser
 
 import (
+	"app/component/app_context"
 	"app/modules/user/business"
 	"app/modules/user/entity"
 	"app/modules/user/repository/sql"
@@ -13,11 +14,10 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg/v10"
 	guuid "github.com/google/uuid"
 )
 
-func HandleImportUserCsv(db *pg.DB) gin.HandlerFunc {
+func HandleImportUserCsv(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		file, header, err := c.Request.FormFile("upload")
 
@@ -46,7 +46,7 @@ func HandleImportUserCsv(db *pg.DB) gin.HandlerFunc {
 		}
 		data := createUserList(users)
 
-		store := sql.NewSQLRepo(db)
+		store := sql.NewSQLRepo(appCtx.GetMainDBConnection())
 		biz := business.NewBusiness(store)
 
 		insertError := biz.ImportUserCSV(c.Request.Context(), data)
@@ -54,14 +54,14 @@ func HandleImportUserCsv(db *pg.DB) gin.HandlerFunc {
 			log.Printf("Error while inserting new user into db, Reason: %v\n", insertError)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"status":  http.StatusInternalServerError,
-				"message": "Something went wrong",
+				"message": err.Error(),
 			})
 			return
 		}
 
 		c.JSON(http.StatusCreated, gin.H{
 			"status":  http.StatusCreated,
-			"message": "User created Successfully",
+			"message": "User imported Successfully",
 		})
 	}
 }
