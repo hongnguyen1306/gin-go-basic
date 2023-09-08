@@ -5,7 +5,6 @@ import (
 	"app/modules/user/business"
 	"app/modules/user/entity"
 	"app/modules/user/repository/sql"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v10"
@@ -20,7 +19,6 @@ func HandleRegister(db *pg.DB) func(ctx *gin.Context) {
 		store := sql.NewSQLRepo(db)
 		md5 := md5.NewMd5Hash()
 		biz := business.NewRegisterStorage(store, md5)
-		fmt.Println("data user createe!!!! ", data)
 
 		if err := biz.Register(c.Request.Context(), data); err != nil {
 			panic(err)

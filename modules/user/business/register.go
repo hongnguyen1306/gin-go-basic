@@ -31,10 +31,15 @@ func NewRegisterStorage(registerStorage RegisterStorage, hasher Hasher) *registe
 }
 
 func (biz *registerBiz) Register(ctx context.Context, data entity.User) error {
-	_, err := biz.registerStorage.FindData(ctx, map[string]interface{}{"email": data.Email})
+	user, err := biz.registerStorage.FindData(ctx, map[string]interface{}{"email": data.Email})
 
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	fmt.Println(entity.ErrEmailExisted)
+	if user.Id != "" {
+		return entity.ErrEmailExisted
 	}
 
 	salt := common.GenSalt(50)
@@ -45,6 +50,7 @@ func (biz *registerBiz) Register(ctx context.Context, data entity.User) error {
 		EmployeeCode: data.EmployeeCode,
 		Email:        data.Email,
 		Role:         data.Role,
+		Password:     data.Password,
 	}
 
 	userCreate.Password = biz.hasher.Hash(userCreate.Password + salt)

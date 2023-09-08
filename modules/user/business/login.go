@@ -5,6 +5,7 @@ import (
 	"app/component/tokenprovider"
 	"app/modules/user/entity"
 	"context"
+	"fmt"
 )
 
 type LoginStore interface {
@@ -32,7 +33,8 @@ func (biz *loginBusiness) Login(ctx context.Context, data *entity.UserLogin) (*e
 	if err != nil {
 		return nil, err
 	}
-	passHashed := biz.hasher.Hash(data.Password + user.FullName)
+	fmt.Println("find user ", user)
+	passHashed := biz.hasher.Hash(data.Password + user.Salt)
 	if user.Password != passHashed {
 		return nil, err
 	}

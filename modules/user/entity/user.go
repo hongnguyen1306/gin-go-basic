@@ -1,7 +1,9 @@
 package entity
 
 import (
+	"app/common"
 	"app/component/tokenprovider"
+	"errors"
 	"time"
 )
 
@@ -43,3 +45,11 @@ type UserCreate struct {
 	Password     string `json:"password"`
 	Salt         string `json:"-"`
 }
+
+var (
+	ErrEmailExisted = common.NewCustomError(
+		errors.New("email has already existed"),
+		"Email has already existed",
+		"ErrEmailExisted",
+	)
+)
