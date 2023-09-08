@@ -1,6 +1,5 @@
-.env
-
 /data
 /tmp
 
 # dotenv environment variable files
+.env
