@@ -12,6 +12,7 @@ type UserRepository interface {
 	FindData(context context.Context, condition map[string]interface{}) (*entity.User, error)
 	DeleteData(context context.Context, id string) (orm.Result, error)
 	ImportDataCSV(context context.Context, data []*entity.User) error
+	UpdateData(context context.Context, id string, data *entity.UserUpdate) error
 }
 
 type business struct {

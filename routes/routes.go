@@ -26,6 +26,7 @@ func SetupRouter(appCtx app_context.AppContext) *gin.Engine {
 		apiRoutes.POST("/import", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleImportUserCsv(appCtx))
 		apiRoutes.GET("/users", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleListUser(appCtx))
 		apiRoutes.GET("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleFindUser(appCtx))
+		apiRoutes.PATCH("/user/update", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleUpdateaUser(appCtx))
 		apiRoutes.DELETE("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleDeleteUser(appCtx))
 	}
 

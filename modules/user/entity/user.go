@@ -8,6 +8,7 @@ import (
 )
 
 type User struct {
+	tableName    struct{}  `pg:"users"`
 	Id           string    `json:"id"`
 	FullName     string    `json:"full_name"`
 	EmployeeCode int       `json:"employee_code"`
@@ -20,8 +21,16 @@ type User struct {
 }
 
 type UserLogin struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	tableName struct{} `pg:"users"`
+	Email     string   `json:"email"`
+	Password  string   `json:"password"`
+}
+
+type UserUpdate struct {
+	tableName struct{}  `pg:"users"`
+	FullName  string    `json:"full_name"`
+	Email     string    `json:"email"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type Account struct {
