@@ -53,3 +53,15 @@ var (
 		"ErrEmailExisted",
 	)
 )
+
+func (u *User) GetUserId() string {
+	return u.Id
+}
+
+func (u *User) GetEmail() string {
+	return u.Email
+}
+
+func (u *User) GetRole() string {
+	return u.Role
+}

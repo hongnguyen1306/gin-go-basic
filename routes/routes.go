@@ -4,6 +4,7 @@ import (
 	"app/component/app_context"
 	"app/memcache"
 	"app/middleware"
+	"app/modules/news/transport/ginnews"
 	"app/modules/user/repository/sql"
 	"app/modules/user/transport/ginuser"
 	"net/http"
@@ -16,15 +17,25 @@ func SetupRouter(appCtx app_context.AppContext) *gin.Engine {
 
 	userStore := sql.NewSQLRepo(appCtx.GetMainDBConnection())
 	userCaching := memcache.NewUserCaching(memcache.NewCaching(), userStore)
-	userRoutes := r.Group("/api")
+
+	apiRoutes := r.Group("/api")
 	{
-		userRoutes.GET("/", welcome)
-		userRoutes.POST("/register", ginuser.HandleRegister(appCtx))
-		userRoutes.POST("/login", ginuser.HandleLogin(appCtx))
-		userRoutes.POST("/import", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleImportUserCsv(appCtx))
-		userRoutes.GET("/users", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleListUser(appCtx))
-		userRoutes.GET("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleFindUser(appCtx))
-		userRoutes.DELETE("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleDeleteUser(appCtx))
+		apiRoutes.GET("/", welcome)
+		apiRoutes.POST("/register", ginuser.HandleRegister(appCtx))
+		apiRoutes.POST("/login", ginuser.HandleLogin(appCtx))
+		apiRoutes.POST("/import", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleImportUserCsv(appCtx))
+		apiRoutes.GET("/users", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleListUser(appCtx))
+		apiRoutes.GET("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleFindUser(appCtx))
+		apiRoutes.DELETE("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleDeleteUser(appCtx))
+	}
+
+	newsRoutes := apiRoutes.Group("/news", middleware.RequireAuth(appCtx, userCaching))
+	{
+		newsRoutes.POST("", ginnews.HandelCreateNews(appCtx))
+		newsRoutes.GET("", ginnews.HanldListNews(appCtx))
+		newsRoutes.GET("/:newsId", ginnews.HanldFindNews(appCtx))
+		newsRoutes.PATCH("/:newsId", ginnews.HandleUpdateNews(appCtx))
+		newsRoutes.DELETE("/:newsId", ginnews.HandelDeleteNews(appCtx))
 	}
 	return r
 }

@@ -1,12 +1,12 @@
 package ginuser
 
 import (
+	"app/common"
 	"app/component/app_context"
 	"app/component/hasher/md5"
 	"app/modules/user/business"
 	"app/modules/user/entity"
 	"app/modules/user/repository/sql"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,17 +24,11 @@ func HandleRegister(appCtx app_context.AppContext) func(ctx *gin.Context) {
 		biz := business.NewRegisterStorage(store, md5)
 
 		if err := biz.Register(c.Request.Context(), &data); err != nil {
-			log.Printf("Error while find a user, Reason: %v\n", err)
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"status":  http.StatusInternalServerError,
-				"message": err.Error(),
-			})
+			c.JSON(http.StatusBadRequest, common.NewFailResponse(err.Error()))
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"status":  200,
-			"message": "OK!!!",
-		})
+
+		c.JSON(http.StatusOK, common.NewSuccessResponse(data, nil, nil))
 	}
 
 }

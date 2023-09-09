@@ -1,12 +1,12 @@
 package ginuser
 
 import (
+	"app/common"
 	"app/component/app_context"
 	"app/modules/user/business"
 	"app/modules/user/entity"
 	"app/modules/user/repository/sql"
 	"encoding/csv"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -19,10 +19,9 @@ import (
 
 func HandleImportUserCsv(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		file, header, err := c.Request.FormFile("upload")
+		file, header, _ := c.Request.FormFile("upload")
 
 		filename := header.Filename
-		fmt.Println(header.Filename)
 		out, err := os.Create(filename)
 		if err != nil {
 			log.Fatal(err)
@@ -51,18 +50,11 @@ func HandleImportUserCsv(appCtx app_context.AppContext) gin.HandlerFunc {
 
 		insertError := biz.ImportUserCSV(c.Request.Context(), data)
 		if insertError != nil {
-			log.Printf("Error while inserting new user into db, Reason: %v\n", insertError)
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"status":  http.StatusInternalServerError,
-				"message": err.Error(),
-			})
+			c.JSON(http.StatusBadRequest, common.NewFailResponse(err.Error()))
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{
-			"status":  http.StatusCreated,
-			"message": "User imported Successfully",
-		})
+		c.JSON(http.StatusOK, common.NewSuccessResponse(data, nil, nil))
 	}
 }
 
