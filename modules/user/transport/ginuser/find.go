@@ -1,21 +1,21 @@
 package ginuser
 
 import (
+	"app/component/app_context"
 	"app/modules/user/business"
 	"app/modules/user/repository/sql"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg/v10"
 )
 
-func HandleFindUser(db *pg.DB) gin.HandlerFunc {
+func HandleFindUser(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		id := c.Param("userId")
 
-		store := sql.NewSQLRepo(db)
+		store := sql.NewSQLRepo(appCtx.GetMainDBConnection())
 		biz := business.NewBusiness(store)
 
 		result, err := biz.FindUser(c.Request.Context(), id)
@@ -23,12 +23,14 @@ func HandleFindUser(db *pg.DB) gin.HandlerFunc {
 			log.Printf("Error while find a user, Reason: %v\n", err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"status":  http.StatusInternalServerError,
-				"message": "Something went wrong",
+				"message": err.Error(),
 			})
 			return
 		}
-
-		c.JSON(http.StatusOK, result)
+		c.JSON(http.StatusOK, gin.H{
+			"status": 200,
+			"data":   result,
+		})
 
 	}
 }

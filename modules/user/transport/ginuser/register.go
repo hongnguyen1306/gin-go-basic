@@ -2,7 +2,9 @@ package ginuser
 
 import (
 	"app/component/app_context"
+	"app/component/hasher/md5"
 	"app/modules/user/business"
+	"app/modules/user/entity"
 	"app/modules/user/repository/sql"
 	"log"
 	"net/http"
@@ -10,16 +12,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HandleDeleteUser(appCtx app_context.AppContext) gin.HandlerFunc {
+func HandleRegister(appCtx app_context.AppContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
-		id := c.Param("userId")
-
+		var data entity.User
+		if err := c.ShouldBindJSON(&data); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		store := sql.NewSQLRepo(appCtx.GetMainDBConnection())
-		biz := business.NewBusiness(store)
+		md5 := md5.NewMd5Hash()
+		biz := business.NewRegisterStorage(store, md5)
 
-		_, err := biz.DeleteUser(c.Request.Context(), id)
-
-		if err != nil {
+		if err := biz.Register(c.Request.Context(), &data); err != nil {
 			log.Printf("Error while find a user, Reason: %v\n", err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"status":  http.StatusInternalServerError,
@@ -27,10 +31,10 @@ func HandleDeleteUser(appCtx app_context.AppContext) gin.HandlerFunc {
 			})
 			return
 		}
-
 		c.JSON(http.StatusOK, gin.H{
 			"status":  200,
-			"message": "Deleted!!",
+			"message": "OK!!!",
 		})
 	}
+
 }

@@ -1,4 +1,9 @@
 /data
 /tmp
 
+<<<<<<< HEAD
 .env
+=======
+# dotenv environment variable files
+.env
+>>>>>>> b252ad2a0e3782658dd8cb8dd279974699f77fe2

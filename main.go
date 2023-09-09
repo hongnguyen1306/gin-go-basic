@@ -1,25 +1,19 @@
 package main
 
 import (
+	"app/common"
+	"app/component/app_context"
 	"app/component/database"
 	"app/routes"
 	"fmt"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func main() {
 	fmt.Println("Main Application Starts")
-	dbConnect := database.ConnectDatabase()
-	r := routes.SetupRouter(dbConnect)
+	config := common.NewConfig()
+	dbConnect := database.New(config)
+	appCtx := app_context.NewAppContext(dbConnect, config)
+	r := routes.SetupRouter(appCtx)
 
 	r.Run(":8080")
-
-	signChan := make(chan os.Signal, 1)
-	signal.Notify(signChan, os.Interrupt, syscall.SIGTERM)
-
-	<-signChan
-	log.Println("Shutting down")
 }
