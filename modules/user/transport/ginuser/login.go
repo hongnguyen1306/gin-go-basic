@@ -1,6 +1,7 @@
 package ginuser
 
 import (
+	"app/common"
 	"app/component/app_context"
 	"app/component/hasher/md5"
 	"app/component/tokenprovider/jwt"
@@ -8,7 +9,6 @@ import (
 	"app/modules/user/entity"
 	"app/modules/user/repository/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
@@ -33,16 +33,10 @@ func HandleLogin(appCtx app_context.AppContext) func(ctx *gin.Context) {
 		biz := business.NewLoginBusiness(store, tokenProvider, md5, 60*60*24*30)
 		account, err := biz.Login(c.Request.Context(), &data)
 		if err != nil {
-			log.Printf("Error while find a user, Reason: %v\n", err)
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"status":  http.StatusInternalServerError,
-				"message": err.Error(),
-			})
+			c.JSON(http.StatusBadRequest, common.NewFailResponse(err.Error()))
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"status": 200,
-			"data":   account,
-		})
+
+		c.JSON(http.StatusOK, common.NewSuccessResponse(account, nil, nil))
 	}
 }

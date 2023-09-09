@@ -6,7 +6,6 @@ import (
 	"app/component/tokenprovider/jwt"
 	"app/modules/user/entity"
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +23,6 @@ func ErrWrongAuthHeader(err error) *common.AppError {
 }
 
 func extractTokenFromHeaderString(s string) (string, error) {
-	fmt.Println("header ", s)
 	parts := strings.Split(s, " ")
 
 	if parts[0] != "Bearer" || len(parts) < 2 || strings.TrimSpace(parts[1]) == "" {
@@ -50,7 +48,7 @@ func RequireAuth(appCtx app_context.AppContext, authenStore AuthenStore) func(c 
 		if err != nil {
 			panic(err)
 		}
-		c.Set("user", user)
+		c.Set(common.CurrentUser, user)
 		c.Next()
 	}
 }
