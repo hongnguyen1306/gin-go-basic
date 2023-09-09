@@ -4,7 +4,6 @@ import (
 	"app/common"
 	"app/modules/user/entity"
 	"context"
-	"fmt"
 
 	guuid "github.com/google/uuid"
 )
@@ -31,11 +30,7 @@ func NewRegisterStorage(registerStorage RegisterStorage, hasher Hasher) *registe
 }
 
 func (biz *registerBiz) Register(ctx context.Context, data *entity.User) error {
-	user, err := biz.registerStorage.FindData(ctx, map[string]interface{}{"email": data.Email})
-
-	if err != nil {
-		fmt.Println(err)
-	}
+	user, _ := biz.registerStorage.FindData(ctx, map[string]interface{}{"email": data.Email})
 
 	if user != nil {
 		return entity.ErrEmailExisted
@@ -55,7 +50,7 @@ func (biz *registerBiz) Register(ctx context.Context, data *entity.User) error {
 	userCreate.Password = biz.hasher.Hash(userCreate.Password + salt)
 	userCreate.Salt = salt
 	if err := biz.registerStorage.CreateData(ctx, userCreate); err != nil {
-		panic(err)
+		return err
 	}
 	return nil
 }
