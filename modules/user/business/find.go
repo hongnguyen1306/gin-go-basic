@@ -6,7 +6,7 @@ import (
 )
 
 func (biz *business) FindUser(ctx context.Context, id string) (*entity.User, error) {
-	result, err := biz.userRepo.FindData(ctx, id)
+	result, err := biz.userRepo.FindData(ctx, map[string]interface{}{"id": id})
 	if err != nil {
 		return nil, err
 	}
