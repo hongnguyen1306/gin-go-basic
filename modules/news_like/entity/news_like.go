@@ -8,3 +8,5 @@ type Like struct {
 	NewsId    string    `json:"newsId"`
 	CreatedAt time.Time `json:"createdAt"`
 }
+
+
