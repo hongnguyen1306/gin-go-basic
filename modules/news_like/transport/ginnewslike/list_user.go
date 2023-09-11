@@ -21,7 +21,7 @@ func HandleListUserLikeNews(appCtx app_context.AppContext) gin.HandlerFunc {
 
 		var paging common.Paging
 
-		if err := c.ShouldBind(&paging); err != nil {
+		if err := c.ShouldBindJSON(&paging); err != nil {
 			c.JSON(http.StatusBadRequest, common.NewFailResponse(err.Error()))
 			return
 		}

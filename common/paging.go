@@ -16,7 +16,7 @@ func (p *Paging) Fulfill() {
 	}
 
 	if p.Limit <= 0 {
-		p.Limit = 50
+		p.Limit = 2
 	}
 
 	p.FakeCursor = strings.TrimSpace(p.FakeCursor)
