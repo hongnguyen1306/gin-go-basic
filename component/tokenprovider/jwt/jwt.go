@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"app/component/tokenprovider"
-	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -34,7 +33,6 @@ func (j *jwtProvider) Generate(data tokenprovider.TokenPayload, expiry int) (*to
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("generate!!!! ", myToken)
 
 	return &tokenprovider.Token{
 		Token:   myToken,
