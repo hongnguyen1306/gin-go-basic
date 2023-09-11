@@ -38,23 +38,12 @@ func NewAccount(accessToken, refreshToken *tokenprovider.Token) *Account {
 
 type UserCreate struct {
 	Id           string `json:"id"`
-	FullName     string `json:"full_name"`
-	EmployeeCode int    `json:"employee_code"`
+	FullName     string `json:"fullName"`
+	EmployeeCode int    `json:"employeeCode"`
 	Email        string `json:"email"`
 	Role         string `json:"role"`
 	Password     string `json:"password"`
 	Salt         string `json:"-"`
-}
-
-type SimpleUser struct {
-	tableName    struct{}  `pg:"users"`
-	Id           string    `json:"id"`
-	FullName     string    `json:"full_name"`
-	EmployeeCode int       `json:"employee_code"`
-	Email        string    `json:"email"`
-	Role         string    `json:"role"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 var (
