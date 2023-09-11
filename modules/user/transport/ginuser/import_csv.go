@@ -19,6 +19,12 @@ import (
 
 func HandleImportUserCsv(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
+		if requester.GetRole() != entity.SuperAdmin {
+			c.JSON(http.StatusForbidden, common.NewFailResponse("Unauthorized"))
+			return
+		}
+
 		file, header, _ := c.Request.FormFile("upload")
 
 		filename := header.Filename

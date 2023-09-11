@@ -74,3 +74,8 @@ func (u *User) GetEmail() string {
 func (u *User) GetRole() string {
 	return u.Role
 }
+
+const (
+	Member     string = "MEMBER"
+	SuperAdmin string = "SUPER_ADMIN"
+)
