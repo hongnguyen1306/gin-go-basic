@@ -16,7 +16,7 @@ func HandleListUser(appCtx app_context.AppContext) gin.HandlerFunc {
 
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 		if requester.GetRole() != entity.SuperAdmin {
-			c.JSON(http.StatusForbidden, common.NewFailResponse("Bạn không có quyền thực hiện hành động này"))
+			c.JSON(http.StatusForbidden, common.NewFailResponse("Unauthorized"))
 			return
 		}
 
