@@ -9,14 +9,14 @@ import (
 
 type User struct {
 	Id           string    `json:"id"`
-	FullName     string    `json:"full_name"`
-	EmployeeCode int       `json:"employee_code"`
+	FullName     string    `json:"fullName"`
+	EmployeeCode int       `json:"employeeCode"`
 	Email        string    `json:"email"`
 	Role         string    `json:"role"`
 	Password     string    `json:"password"`
 	Salt         string    `json:"-"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
 type UserLogin struct {
@@ -25,8 +25,8 @@ type UserLogin struct {
 }
 
 type Account struct {
-	AccressToken *tokenprovider.Token `json:"access_token"`
-	RefreshToken *tokenprovider.Token `json:"refresh_token"`
+	AccressToken *tokenprovider.Token `json:"accessToken"`
+	RefreshToken *tokenprovider.Token `json:"refreshToken"`
 }
 
 func NewAccount(accessToken, refreshToken *tokenprovider.Token) *Account {
@@ -44,6 +44,17 @@ type UserCreate struct {
 	Role         string `json:"role"`
 	Password     string `json:"password"`
 	Salt         string `json:"-"`
+}
+
+type SimpleUser struct {
+	tableName    struct{}  `pg:"users"`
+	Id           string    `json:"id"`
+	FullName     string    `json:"full_name"`
+	EmployeeCode int       `json:"employee_code"`
+	Email        string    `json:"email"`
+	Role         string    `json:"role"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 var (

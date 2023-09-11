@@ -12,7 +12,7 @@ func (sql *sqlRepo) Delete(context context.Context, userId string, newsId string
 		UserId: userId,
 		NewsId: newsId,
 	}
-	res, err := sql.db.Model(data).Delete()
+	res, err := sql.db.Model(data).Where("user_id = ?", userId).Delete()
 	if err != nil {
 		return nil, err
 	}

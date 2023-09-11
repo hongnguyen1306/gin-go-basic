@@ -5,6 +5,7 @@ import (
 	"app/memcache"
 	"app/middleware"
 	"app/modules/news/transport/ginnews"
+	"app/modules/news_like/transport/ginnewslike"
 	"app/modules/user/repository/sql"
 	"app/modules/user/transport/ginuser"
 	"net/http"
@@ -36,6 +37,11 @@ func SetupRouter(appCtx app_context.AppContext) *gin.Engine {
 		newsRoutes.GET("/:newsId", ginnews.HanldFindNews(appCtx))
 		newsRoutes.PATCH("/:newsId", ginnews.HandleUpdateNews(appCtx))
 		newsRoutes.DELETE("/:newsId", ginnews.HandelDeleteNews(appCtx))
+
+		newsRoutes.GET("/:newsId/liked-users", ginnewslike.HandleListUserLikeNews(appCtx))
+
+		newsRoutes.POST("/:newsId/like", ginnewslike.HandleUserLikeNews(appCtx))
+		newsRoutes.DELETE("/:newsId/unlike", ginnewslike.HandleUserUnlikeNews(appCtx))
 	}
 	return r
 }

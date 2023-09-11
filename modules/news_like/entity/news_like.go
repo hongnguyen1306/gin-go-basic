@@ -1,12 +1,14 @@
 package entity
 
-import "time"
+import (
+	"app/common"
+	"time"
+)
 
 type Like struct {
-	tableName struct{}  `pg:"news_like"`
-	UserId    string    `json:"userId"`
-	NewsId    string    `json:"newsId"`
-	CreatedAt time.Time `json:"createdAt"`
+	tableName struct{}           `pg:"news_like"`
+	NewsId    string             `json:"newsId" pg:",pk"`
+	UserId    string             `json:"userId" pg:",pk"`
+	CreatedAt time.Time          `json:"createdAt"`
+	User      *common.SimpleUser `json:"user" pg:"rel:has-one"`
 }
-
-
