@@ -13,7 +13,7 @@ import (
 
 func HandleUserLikeNews(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		newsId := c.Param("newsId")
+		newsId := c.Param("id")
 
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 		data := entity.Like{

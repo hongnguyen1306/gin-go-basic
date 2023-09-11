@@ -13,7 +13,7 @@ import (
 
 func HandleDeleteUser(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Param("userId")
+		id := c.Param("id")
 
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 		if requester.GetRole() != entity.SuperAdmin {
