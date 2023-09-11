@@ -13,7 +13,7 @@ import (
 func HandleFindUser(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		id := c.Param("userId")
+		id := c.Param("id")
 
 		store := sql.NewSQLRepo(appCtx.GetMainDBConnection())
 		biz := business.NewBusiness(store)

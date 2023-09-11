@@ -13,7 +13,7 @@ import (
 
 func HandleListUserLikeNews(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		newsId := c.Param("newsId")
+		newsId := c.Param("id")
 
 		filter := entity.Filter{
 			NewsId: newsId,

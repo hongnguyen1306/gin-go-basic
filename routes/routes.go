@@ -22,28 +22,34 @@ func SetupRouter(appCtx app_context.AppContext) *gin.Engine {
 	apiRoutes := r.Group("/api")
 	{
 		apiRoutes.GET("/", welcome)
-		apiRoutes.POST("/register", ginuser.HandleRegister(appCtx))
-		apiRoutes.POST("/login", ginuser.HandleLogin(appCtx))
-		apiRoutes.POST("/import", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleImportUserCsv(appCtx))
-		apiRoutes.GET("/users", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleListUser(appCtx))
-		apiRoutes.GET("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleFindUser(appCtx))
-		apiRoutes.PATCH("/user/update", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleUpdateaUser(appCtx))
-		apiRoutes.DELETE("/user/:userId", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleDeleteUser(appCtx))
+
+		userRoutes := apiRoutes.Group("/users")
+		{
+			userRoutes.POST("/register", ginuser.HandleRegister(appCtx))
+			userRoutes.POST("/login", ginuser.HandleLogin(appCtx))
+			userRoutes.POST("/import", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleImportUserCsv(appCtx))
+			userRoutes.GET("", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleListUser(appCtx))
+			userRoutes.GET("/:id", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleFindUser(appCtx))
+			userRoutes.DELETE("/:id", middleware.RequireAuth(appCtx, userCaching), ginuser.HandleDeleteUser(appCtx))
+		}
+
+		newsRoutes := apiRoutes.Group("/news", middleware.RequireAuth(appCtx, userCaching))
+		{
+			newsRoutes.POST("", ginnews.HandelCreateNews(appCtx))
+			newsRoutes.GET("", ginnews.HanldListNews(appCtx))
+			newsRoutes.GET("/:id", ginnews.HanldFindNews(appCtx))
+			newsRoutes.PATCH("/:id", ginnews.HandleUpdateNews(appCtx))
+			newsRoutes.DELETE("/:id", ginnews.HandelDeleteNews(appCtx))
+		}
+
+		newsLikeRoutes := apiRoutes.Group("/news/:id/like", middleware.RequireAuth(appCtx, userCaching))
+		{
+			newsLikeRoutes.GET("/users", ginnewslike.HandleListUserLikeNews(appCtx))
+			newsLikeRoutes.POST("", ginnewslike.HandleUserLikeNews(appCtx))
+			newsLikeRoutes.DELETE("", ginnewslike.HandleUserUnlikeNews(appCtx))
+		}
 	}
 
-	newsRoutes := apiRoutes.Group("/news", middleware.RequireAuth(appCtx, userCaching))
-	{
-		newsRoutes.POST("", ginnews.HandelCreateNews(appCtx))
-		newsRoutes.GET("", ginnews.HanldListNews(appCtx))
-		newsRoutes.GET("/:newsId", ginnews.HanldFindNews(appCtx))
-		newsRoutes.PATCH("/:newsId", ginnews.HandleUpdateNews(appCtx))
-		newsRoutes.DELETE("/:newsId", ginnews.HandelDeleteNews(appCtx))
-
-		newsRoutes.GET("/:newsId/liked-users", ginnewslike.HandleListUserLikeNews(appCtx))
-
-		newsRoutes.POST("/:newsId/like", ginnewslike.HandleUserLikeNews(appCtx))
-		newsRoutes.DELETE("/:newsId/unlike", ginnewslike.HandleUserUnlikeNews(appCtx))
-	}
 	return r
 }
 

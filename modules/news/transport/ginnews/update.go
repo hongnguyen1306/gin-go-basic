@@ -13,7 +13,7 @@ import (
 
 func HandleUpdateNews(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Param("newsId")
+		id := c.Param("id")
 
 		var data entity.NewsUpdate
 		if err := c.ShouldBind(&data); err != nil {

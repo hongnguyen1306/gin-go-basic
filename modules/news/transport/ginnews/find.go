@@ -12,7 +12,7 @@ import (
 
 func HanldFindNews(appCtx app_context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := c.Param("newsId")
+		id := c.Param("id")
 
 		store := sql.NewSQLRepo(appCtx.GetMainDBConnection())
 		biz := business.NewBusiness(store)
