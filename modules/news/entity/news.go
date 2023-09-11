@@ -1,6 +1,8 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 type News struct {
 	tableName struct{}  `pg:"news"`
